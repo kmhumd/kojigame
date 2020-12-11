@@ -60,7 +60,7 @@ export default {
   methods:{
     cellColor(cellname){
       const self = this
-      console.log(cellname)
+      //console.log(cellname)
 
       if(self.player1.indexOf(cellname) != -1){
         // console.log(cellname + "p1")
@@ -79,41 +79,62 @@ export default {
     moveKoma(payload) {
       if(payload.direction == "up"){
         const self = this
-        let i = 1
-        while(self.field[Number(payload.coordY) - i][payload.coordX] == 0){
-          i++
-        }
-        if(i!=0){
-          self.field[Number(payload.coordY) - i].splice(Number(payload.coordX) ,1,self.field[Number(payload.coordY) - i+1][payload.coordX])
-          self.field[Number(payload.coordY) -i+1].splice(Number(payload.coordX),1,"0")
+        for(let i=1; -1 < payload.coordY - i ; i++){
+          if(self.field[payload.coordY - i][payload.coordX] != 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY - i + 1].splice(Number(payload.coordX),1,tmp)
+            break
+          }else if(payload.coordY - i == 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[0].splice(Number(payload.coordX),1,tmp)
+            break
+          }
         }
       }else if(payload.direction == "down"){
         const self = this
-        let i = 0
-        while(self.field[Number(payload.coordY) + i + 1][payload.coordX] == 0){
-          i++
-        }
-        if(i!=0){
-          self.field[Number(payload.coordY) + i].splice(Number(payload.coordX) ,1,self.field[Number(payload.coordY)][payload.coordX])
-          //self.field[Number(payload.coordY) +i-1].splice(Number(payload.coordX),1,"0")
+        for(let i=1; payload.coordY + i < 5; i++){
+          if(self.field[payload.coordY  + i][payload.coordX] != 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY + i - 1].splice(Number(payload.coordX) ,1,tmp)
+            break
+          }else if(i + payload.coordY == 4){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[4].splice(Number(payload.coordX),1,tmp)
+            break
+          }
         }
       }else if(payload.direction == "left"){
         const self = this
-        let i = 0
-        while(self.field[payload.coordY][Number(payload.coordX) - i - 1]  == 0){  
-          i++
-        }
-        if(i!=0){
-          self.field[payload.coordY].splice(Number(payload.coordX) - i,1,self.field[payload.coordY][Number(payload.coordX)])
-          self.field[payload.coordY].splice(Number(payload.coordX),1,"0")
+        for(let i=1; -1 < payload.coordX - i  ; i++){
+          if(self.field[payload.coordY][payload.coordX - i] != 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY].splice(Number(payload.coordX) - i + 1 ,1,tmp)
+            break
+          }else if(payload.coordX - i == 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY].splice(0,1,tmp)
+            break
+          }
         }
         
       }else if(payload.direction == "right"){
         const self = this
-        for(let i=1; i < 5; i++){
-          if(self.field[payload.coordY][payload.coordX + i] != 0 ){
-            self.field[payload.coordY].splice(Number(payload.coordX) + i - 1 ,1,self.field[payload.coordY][Number(payload.coordX)])
-            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0") 
+        for(let i=1; i + payload.coordX < 5; i++){
+          if(self.field[payload.coordY][payload.coordX + i] != 0){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY].splice(Number(payload.coordX) + i - 1 ,1,tmp)
+            break
+          }else if(i + payload.coordX == 4){
+            const tmp = self.field[payload.coordY][payload.coordX]
+            self.field[payload.coordY].splice(Number(payload.coordX) ,1,"0")
+            self.field[payload.coordY].splice(4,1,tmp)
             break
           }
         }
